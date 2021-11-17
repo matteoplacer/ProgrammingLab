@@ -8,4 +8,3 @@ def somma_lista (lista_numeri):
 
 
 risultato=somma(lista_numeri)
-    
