@@ -50,7 +50,6 @@ else:
     else: 
          print("...a lot")
 
-"""
 
 #esempio 5
 mylist=['marco', 'giulio', 'matteo', 'fabio']
@@ -64,11 +63,42 @@ for item in mylist:
     print(item)
 
 
-
 #esempio 6
+var=-7
+x=2
+y=3
+var=abs(var)
+print('{}'.format(var))
+#print('{}'.format(abs(var)))
+print('potenza: {}'.format(pow(x,y)))
 
+lista = [13, -2, 34, 4, -7, 9]
+somma=sum(lista)
+print('somma: {}'.format(somma))
+#print('somma: {}'.format(sum(lista)))
+print('max: {}'.format(max(lista)))
+print('min: {}'.format(min(lista)))
+print('lunghezza: {}'.format(len(lista)))
+
+"""
 
 #esempio 7
+import math
+def funzione (x, y):
+    print('somma: {}'.format(x+y))
+    print('sottrazione: {}'.format(x-y))
+    print('moltiplicazione: {}'.format(x*y))
+    print('divisione: {}'.format(x/y))
+    print('potenza: {}'.format(pow(x,y)))
+    print('minimo: {}'.format(min(x,y)))
+    print('massimo: {}'.format(max(x,y)))
+    print('valore assoluto x: {}'.format(abs(x)))
+    print('valore assoluto y: {}'.format(abs(y)))
+    print('radice quadrata x: {}'.format(math.sqrt(x)))
+    print('radice quadrata y: {}'.format(math.sqrt(y)))
 
+x=5
+y=8
+funzione (x,y)
 
 #esempio 8
