@@ -17,5 +17,5 @@ def myfun(my_list):
     return s;
 my_list=[1,2,3,4]
 s=myfun(my_list)
-print("la somma è: {}".format(s)
+print("la somma è: {}".format(s))
 #print("la somma è: {}".format(myfun(my_list)))

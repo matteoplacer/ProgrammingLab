@@ -1,7 +1,7 @@
 
 """
 
-#esempio 1
+#esempio 1 (LEZIONE 2)
 lista = [13, -2, 34, 4, -7, 9]
 
 for elemento in lista:
@@ -19,14 +19,13 @@ print('{}'.format(stringa2))
 #esempio 3
 lista = [13, -2, 34, 4, -7, 9]
 
-for elemento in lista:
-    if -2 in lista:
+if -2 in lista:
         print ('si')
 
 
 lista = [13, -2, 34, 4, -7, 9]
 var=-2
-for var in lista:
+if var in lista:
     print ('si')
 
 
@@ -80,7 +79,6 @@ print('max: {}'.format(max(lista)))
 print('min: {}'.format(min(lista)))
 print('lunghezza: {}'.format(len(lista)))
 
-"""
 
 #esempio 7
 import math
@@ -101,4 +99,137 @@ x=5
 y=8
 funzione (x,y)
 
+
 #esempio 8
+my_list = ["marco", "irene", "paolo"]
+if "marco" in my_list:
+    print("Ho trovato marco!")
+
+lista = [13, -2, 34, 4, -7, 9]
+var=4
+if 4 in lista:
+    print ('Si!')
+
+
+#esempio 9 (esercizio lezione 2)
+def somma_lista (lista):
+    somma=0
+    for elemento in lista:
+        somma=somma+elemento
+    return somma
+
+lista=[3,9,6,4,2,5]
+print('La somma degli elementi nella lista è: {}'.format(somma_lista(lista)))
+
+
+#esempio 10 (LEZIONE 3)
+file=open('shampoo_sales.csv', 'r')
+#print(file.read())
+print(file.read()[0:50])
+file.close()
+
+
+#esempio 11
+# Apro il file
+file=open('shampoo_sales.csv', 'r')
+# Leggo il contenuto
+my_file_contents = file.read()
+# Stampo a schermo i primi 50 caratteri
+if len(my_file_contents) > 50:
+    print(my_file_contents[0:50] + '...')
+else:
+    print(my_file_contents)
+# Chiudo il file
+file.close()
+
+
+#esempio 12
+file = open('shampoo_sales.csv', 'r')
+print(file.readline())
+print(file.readline())
+file.close()
+
+
+#esempio 13
+file = open('shampoo_sales.csv', 'r')
+for line in file:
+    print(line)
+file.close()
+
+
+#esempio 14 
+file = open('shampoo_sales.csv', 'r')
+for i in range(5):
+    print(file.readline())
+file.close()
+
+i=0
+file = open('shampoo_sales.csv', 'r')
+for line in file:
+    if(i>4): break;
+    print(line)
+    i=i+1
+file.close()
+
+file = open('shampoo_sales.csv', 'r')
+for i, line in enumerate(file):
+    if(i>4): break;
+    print(line)
+file.close()
+
+
+#esempio 15
+stringa='ciao, come va?'
+separazione=stringa.split(',')
+print('{}'.format(separazione))
+
+stringa='5.5'
+numero=float(stringa)
+print('{}'.format(numero))
+
+lista=[1,2,3]
+lista.append(4)
+print('{}'.format(lista))
+
+
+#esempio 16
+# Inizializzo una lista vuota per salvare i valori
+values = []
+# Apro e leggo il file, linea per linea
+file = open('shampoo_sales.csv', 'r')
+for line in file:
+    # Faccio lo split di ogni riga sulla virgola
+    elements = line.split(',')
+    #print('{}'.format(elements))
+    # Se NON sto processando l’intestazione...
+    if elements[0] != 'Date':
+        # Setto la data e il valore
+        date = elements[0]
+        value = elements[1]
+        # Aggiungo alla lista dei valori questo valore
+        values.append(float(value))
+#somma=sum(values)
+file.close()
+print('{}'.format(values))
+#print('{}'.format(somma))
+
+"""
+
+#esempio 17 (esercizio lezione 3)
+def somma_lista (file):
+    valori=[]
+    for line in file:
+        elemento=line.split(',')
+        if(elemento[0]!='Date'):
+            valore=elemento[1]
+            valori.append(float(valore))
+    return(sum(valori))
+
+file = open('shampoo_sales.csv', 'r')
+print('{}'.format(somma_lista(file)))
+file.close()   
+
+
+
+
+
