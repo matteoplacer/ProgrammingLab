@@ -230,6 +230,8 @@ print('{}'.format(somma_lista(file)))
 file.close()   
 
 
+#esempio 18 (LEZIONE 4)
+
 
 
 
