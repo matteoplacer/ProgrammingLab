@@ -1,5 +1,5 @@
 #io
-lista_numeri = [14, 5, 9, 1, 7, 2]
+lista_numeri = [14, 5, 9, 1, 7, 2, 9]
 
 def somma_lista (lista_numeri):
     risultato=0
