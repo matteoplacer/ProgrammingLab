@@ -1,6 +1,6 @@
 class CSVfile():
 
-    def _init_(self,file_name):
+    def __init__(self,file_name):
         self.name=file_name
         
     def get_data(self):
@@ -20,7 +20,7 @@ class CSVfile():
 
 class CSVfilenumerico:
 
-    def _init_(self,file_name):
+    def __init__(self,file_name):
         self.name=file_name
 
     def change_type(self):
@@ -38,7 +38,7 @@ class CSVfilenumerico:
                 sales.append(my_num)
         return sales
 
-my_file=CSVfile('shampoo_sales.csv')
+my_file=CSVfile('shampoo.csv')
 my_file2=CSVfilenumerico('shampoo_sales_lezione5.csv')
 sales=my_file2.change_type()
 for item in sales:
