@@ -50,7 +50,7 @@ for item in sales:
 #ema
 class CSVfile():
 
-    def _init_(self,file_name):
+    def __init__(self,file_name):
         self.name=file_name
         if not isinstance(file_name, str):
             raise Exception ('il file non è una stringa')
