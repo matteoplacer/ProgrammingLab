@@ -12,7 +12,7 @@ class IncrementModel(Model):
         item1=0
         for item in data:
             if(item != data[0]):
-                incremento=abs(item1-item)+incremento
+                incremento=(item-item1)+incremento
             item1=item
         prediction = ((incremento/(len(data)-1)) + item)
         return prediction
