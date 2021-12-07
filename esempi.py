@@ -213,7 +213,6 @@ file.close()
 print('{}'.format(values))
 #print('{}'.format(somma))
 
-"""
 
 #esempio 17 (esercizio lezione 3)
 def somma_lista (file):
@@ -231,7 +230,140 @@ file.close()
 
 
 #esempio 18 (LEZIONE 4)
+class Person():
+    def __init__ (self, nome, cognome):
+        self.nome = nome
+        self.cognome = cognome
+
+person=Person('Matteo', 'Placer')
+print (person)
+print(person.nome)
+print(person.cognome)
 
 
+#esempio 19
+class Person():
+    def __init__ (self, nome, cognome):
+        self.nome = nome
+        self.cognome = cognome
+    
+    def __str__ (self):
+        return 'Persona "{} {}"'.format(self.nome, self.cognome)
+
+person=Person('Matteo', 'Placer')
+print (person)
 
 
+#esempio 20
+import random
+
+class Persona():
+    def __init__ (self, nome, cognome):
+        self.nome = nome
+        self.cognome = cognome
+    
+    def __str__ (self):
+        return 'Persona "{} {}"'.format(self.nome, self.cognome)
+    
+    def saluto (self):
+        random_numero=random.randint(0,2)
+
+        if(random_numero==0):
+            print('Ciao, sono {} {}.'.format(self.nome, self.cognome))
+        elif(random_numero==1):
+            print('Bro, sono {} {}.'.format(self.nome, self.cognome))
+        elif(random_numero==2):
+            print('Piacere, sono {} {}.'.format(self.nome, self.cognome))
+
+persona=Persona('Matteo', 'Placer')
+persona.saluto()
+
+
+#esempio 21
+import random
+
+class Persona():
+    def __init__ (self, nome, cognome):
+        self.nome = nome
+        self.cognome = cognome
+    
+    def __str__ (self):
+        return 'Persona "{} {}"'.format(self.nome, self.cognome)
+    
+    def saluto (self):
+        random_numero=random.randint(0,2)
+
+        if(random_numero==0):
+            print('Ciao, sono {} {}.'.format(self.nome, self.cognome))
+        elif(random_numero==1):
+            print('Bro, sò {} {}.'.format(self.nome, self.cognome))
+        elif(random_numero==2):
+            print('Piacere, sono {} {}.'.format(self.nome, self.cognome))
+    
+class Studente (Persona):
+    def __str__ (self):
+        return('Studente {} {}'.format(self.nome, self.cognome))
+    
+    def saluto (self):
+        print('Buongiorno, sono lo studente {} {}'.format(self.nome, self.cognome))
+
+    def saluto_originale (self):
+        super().saluto()
+
+class Professore (Persona):
+    def __str__ (self):
+        return('Professore {} {}'.format(self.nome, self.cognome))
+    
+    def saluto (self):
+        print('Ciao, sono il professore {} {}'.format(self.nome, self.cognome))
+
+    def saluto_originale (self):
+        super().saluto()
+
+print('----------------------------')
+
+professore=Professore('Giulio', 'Caravagna')
+print (professore)
+professore.saluto()
+professore.saluto_originale()
+
+print('----------------------------')
+
+studente=Studente('Denni', 'Muratore')
+print(studente)
+studente.saluto()
+studente.saluto_originale()
+
+print('----------------------------')
+
+persona=Persona('Carlo', 'Patuzzi')
+print(persona)
+persona.saluto()
+
+print('----------------------------')
+
+"""
+
+#esempio 22 (esercizio lezione 4) non capito
+class CSVFile ():
+
+    def __init__ (self, name_file):
+        self.name = name_file
+    
+    def get_data (self):
+        lista=[]
+        my_file = open(self.name, 'r')
+        for line in my_file:
+            elemento=line.split(',')
+            if(elemento[0]!='Date'):
+                lineElements = line.split (',')
+                lineElements [1] = lineElements[1].strip()
+                lista.append(lineElements)
+        return lista
+
+shampooFile = CSVFile ('shampoo_sales.csv')
+shampooList = shampooFile.get_data()
+
+for line in shampooList:
+    print(line)
+     
