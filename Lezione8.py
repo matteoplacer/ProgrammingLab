@@ -8,9 +8,17 @@ class Model():
 
 class IncrementModel(Model):
     def predict(self, data):
+        if(item!=data[0])
+        incremento=0
+        item1=0
         for item in data:
-            # Logica per la predizione
-            
-        prediction = 
+            if(item!=data[0]):
+                incremento=(item-item1)+incremento
+            item1=item
+        prediction = ((incremento/(len(data)-1)) + item)
         return prediction
 
+Modello=IncrementModel()
+data=[50,52,60]
+previsione=Modello.predict(data)
+print("La previsione è: {}".format(previsione))
