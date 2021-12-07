@@ -8,12 +8,11 @@ class Model():
 
 class IncrementModel(Model):
     def predict(self, data):
-        if(item!=data[0])
         incremento=0
         item1=0
         for item in data:
-            if(item!=data[0]):
-                incremento=(item-item1)+incremento
+            if(item != data[0]):
+                incremento=abs(item1-item)+incremento
             item1=item
         prediction = ((incremento/(len(data)-1)) + item)
         return prediction
