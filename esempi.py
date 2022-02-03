@@ -493,8 +493,6 @@ fraz,int=modf(x)
 x=int
 """
 
-from math import modf
-
 class CSVFile ():
     def __init__ (self, name_file):
         self.name=name_file
@@ -504,6 +502,7 @@ class CSVFile ():
     def get_data (self):
         
         lista=[]
+
         try:
             file = open(self.name, 'r')
         except Exception as e:
@@ -515,27 +514,26 @@ class CSVFile ():
             if(elemento[0]!='Date'):
                 elemento[1]=elemento[1].strip()
                 lista.append(elemento)
+        
         try:
-            x=int(input("Inserire l'inizio dell'intervallo:"))
+            x=int(input("Inserire l'inizio dell'intervallo: "))
         except Exception as e:
-            print("{} non è convertibile in int".format(x))
-            print("ho trovato questo errore: {}".format(e))
-        if not isinstance(x, int) or (x<0):
-            raise Exception("{} non è un numero intero positivo".format(x))
-        if (x>len(lista)):
-            raise Exception("{} è più grande del numero di linee del file".format(x))
+            print("Errore generico: {}".format(e))
+            print("La variabile x di default assumerà valore 0")
+            x=0
+        if x<0 or x>len(lista):
+            raise Exception("Il numero inserito è negativo o maggiore della lunghezza della lista")
 
         try:
-        	y=input("Inserire la fine dell'intervallo:")
-		except Exception as e:
-            print("{} non è convertibile in int".format(x))
-            print("ho trovato questo errore: {}".format(e))
-        if not isinstance(y, int) or y<0:
-            raise Exception("{} non è un numero intero positivo".format(y))
-        if (y>len(self.name)):
-            raise Exception("{} è più grande del numero di linee del file".format(y))
-        if (x>y):
-            raise Exception(" la fine dell'intervallo {} è minore del suo inizio {}".format(y,x))
+            y=int(input("Inserire la fine dell'intervallo: "))
+        except Exception as e:
+            print("Errore generico: {}".format(e))
+            print("La variabile y di default assumerà valore pari alla lunghezza della lista")
+            y=len(lista)
+        if y<0 or y>len(lista):
+            raise Exception("Il numero inserito è negativo o maggiore della lunghezza della lista")
+        if x>y:
+            raise Exception("La fine dell'intervallo è minore del suo inizio")     
 
         print("Intervallo: [{},{}]".format(x,y))
 
