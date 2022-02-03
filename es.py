@@ -21,20 +21,30 @@ class CSVFile ():
                 elemento[1]=elemento[1].strip()
                 lista.append(elemento)
         try:
-            x=input("Inserire l'inizio dell'intervallo:")
+            x=int(input("Inserire l'inizio dell'intervallo:"))
         except Exception as e:
-            print("Ho avuto questo errore: {}".format(e))
-        if (type(x)!=int):
-            print("{} non è un numero intero".format(x))
-            fraz,int = modf(x)
-			x=(int)
-        
+			print("{} non è convertibile in int".format(x))
+			print("ho trovato questo errore: {}".format(e))
+        if not isinstance(x, int) or (x<0):
+            raise Exception("{} non è un numero intero positivo".format(x))
+        if (x>len(lista)):
+            raise Exception("{} è più grande del numero di linee del file".format(x))
 
-        y=input("Inserire la fine dell'intervallo:")
+        try:
+        	y=input("Inserire la fine dell'intervallo:")
+		except Exception as e:
+            print("{} non è convertibile in int".format(x))
+            print("ho trovato questo errore: {}".format(e))
+        if not isinstance(y, int) or y<0:
+            raise Exception("{} non è un numero intero positivo".format(y))
+        if (y>len(self.name)):
+            raise Exception("{} è più grande del numero di linee del file".format(y))
+        if (x>y):
+            raise Exception(" la fine dell'intervallo {} è minore del suo inizio {}".format(y,x))
 
         print("Intervallo: [{},{}]".format(x,y))
 
-        return lista[x-1:y]
+        return lista[x:y]
         
     
     def _str_(self):
