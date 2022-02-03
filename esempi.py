@@ -405,7 +405,7 @@ except Exception as e: #ValueError
     print("Non posso convertire la variabile a valore numerico")
     print("La variabile 'var' valeva: {}".format(var))
     print("Ed ho avuto questo errore: {}".format(e))
-"""
+
 
 #esempio 25
 var=True
@@ -474,6 +474,22 @@ Lista2 = File2.get_data2()
 
 for line in Lista2:
     print(line)
-
+"""
 
 #esempio 27 (LEZIONE 6)
+sesso = 'M'
+sesso = sesso.strip()
+sesso = sesso.upper()
+if sesso not in ['M', 'F']:
+    raise Exception ("Errore dalla variabile sesso con valore {}".format(sesso))
+
+
+#esempio 28
+nome = input("Come ti chiami? ")
+print("Ciao", nome)
+
+
+from math import modf
+fraz,int = modf(1.23456)
+print (int)
+

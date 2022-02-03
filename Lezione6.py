@@ -57,7 +57,7 @@ class CSVfile():
             
     def get_data(self):
         data=[]
-        #inserisco manualmente l'inizio dell'intervallo e sanitizzo òe possibili eccezioni
+        #inserisco manualmente l'inizio dell'intervallo e sanitizzo le possibili eccezioni
         try:
             x=int(input("inserisci l'inizio dell'intervallo:"))
         except Exception as e:

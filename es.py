@@ -1,10 +1,13 @@
-
+from math import modf
 
 class CSVFile ():
     def __init__ (self, name_file):
         self.name=name_file
+        if not isinstance (name_file, str):
+            raise Exception ('Il file {} non è una stinga'.format(name_file))
 
     def get_data (self):
+        
         lista=[]
         try:
             file = open(self.name, 'r')
@@ -17,35 +20,34 @@ class CSVFile ():
             if(elemento[0]!='Date'):
                 elemento[1]=elemento[1].strip()
                 lista.append(elemento)
-        return lista
+        try:
+            x=input("Inserire l'inizio dell'intervallo:")
+        except Exception as e:
+            print("Ho avuto questo errore: {}".format(e))
+        if (type(x)!=int):
+            print("{} non è un numero intero".format(x))
+            fraz,int = modf(x)
+			x=(int)
+        
 
+        y=input("Inserire la fine dell'intervallo:")
 
-class CSVFileNumerico ():
-    def __init__ (self, name_file):
-        self.name=name_file
+        print("Intervallo: [{},{}]".format(x,y))
 
-    def get_data2 (self):
-        lista=[]
-        file = open(self.name, 'r')
-        for line in file:
-            elemento=line.split(',')
-            if(elemento[1]!='Sales\n'):
-                elemento[1]=elemento[1].strip()
-                try:
-                    elemento[1]=float(elemento[1])
-                except Exception as E:
-                    print("Non posso convertire {} a valore numerico".format(elemento[1]))
-                    print("Ho avuto questo errore: {}.".format(E))
-                    print("Di default verrà inserito none")
-                    elemento[1]=None
-                lista.append(elemento[1])
-        return lista
+        return lista[x-1:y]
+        
+    
+    def _str_(self):
+        return 'CSVfile {}'.format(self.name)
+
 
 
 File = CSVFile ('shampoo_sales.csv')
 Lista = File.get_data()
-File2 = CSVFileNumerico ('shampoo_sales_lezione5.csv')
-Lista2 = File2.get_data2()
 
-for line in Lista2:
+
+for line in Lista:
     print(line)
+
+
+
