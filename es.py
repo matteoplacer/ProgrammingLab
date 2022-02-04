@@ -1,16 +1,9 @@
-
-
 class CSVFile ():
-    def __init__ (self, name_file):
-        self.name=name_file
-        if not isinstance (name_file, str):
-            raise Exception ('Il file {} non è una stinga'.format(name_file))
-
+    def __init__ (self, name):
+        self.name=name
 
     def get_data (self):
-        
         lista=[]
-
         try:
             file = open(self.name, 'r')
         except Exception as e:
@@ -22,37 +15,34 @@ class CSVFile ():
             if(elemento[0]!='Date'):
                 elemento[1]=elemento[1].strip()
                 lista.append(elemento)
-        
-        x=int(input("Inserire l'inizio dell'intervallo: "))
-        y=int(input("Inserire la fine dell'intervallo: "))
-        
-        x=abs(x)
-        y=abs(y)
-        if(x>y):
-            t=y
-            y=x
-            x=t
-
-        if x>len(lista):
-            raise Exception("Il numero {} è maggiore della lunghezza della lista".format(x))
-
-        if y>len(lista):
-            raise Exception("Il numero {} è maggiore della lunghezza della lista".format(y))
-
-        print("Intervallo: [{},{}]".format(x,y))
-
-        return lista[x:y]
-        
-
-    def _str_(self):
-        return 'CSVfile {}'.format(self.name)
+        return lista
 
 
-File = CSVFile ('shampoo_sales.csv')
-Lista = File.get_data()
+class CSVFileNumerico (CSVFile):
+    def get_data(self):
 
-for line in Lista:
-    print(line)
+        string_data = super().get_data()
+        numerical_data = []
+
+        for string_row in string_data:
+            numerical_row = []
+
+            for i,element in enumerate(string_row):
+                if i == 0:
+                    numerical_row.append(element)  
+                else:
+                    try:
+                        numerical_row.append(float(element))
+                    except Exception as e:
+                        print('Errore in conversione del valore "{}" a numerico: "{}"'.format(element, e))
+                        break
+
+            if len(numerical_row) == len(string_row):
+                numerical_data.append(numerical_row)
+
+        return numerical_data
 
 
-
+mio_file_numerico = CSVFileNumerico(name='shampoo_sales.csv')
+print('Nome del file: "{}"'.format(mio_file_numerico.name))
+print('Dati contenuti nel file: "{}"'.format(mio_file_numerico.get_data()))

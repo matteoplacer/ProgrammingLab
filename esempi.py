@@ -475,6 +475,183 @@ Lista2 = File2.get_data2()
 for line in Lista2:
     print(line)
 
+#==============================
+#  Classe per file CSV
+#==============================
+
+class CSVFile:
+
+    def __init__(self, name):
+        
+        # Setto il nome del file
+        self.name = name
+        
+        
+        # Provo ad aprirlo e leggere una riga
+        self.can_read = True
+        try:
+            my_file = open(self.name, 'r')
+            my_file.readline()
+        except Exception as e:
+            self.can_read = False
+            print('Errore in apertura del file: "{}"'.format(e))
+
+
+    def get_data(self):
+        
+        if not self.can_read:
+            
+            # Se nell'init ho settato can_read a False vuol dire che
+            # il file non poteva essere aperto o era illeggibile
+            print('Errore, file non aperto o illeggibile')
+            
+            # Esco dalla funzione tornando "niente".
+            return None
+
+        else:
+            # Inizializzo una lista vuota per salvare tutti i dati
+            data = []
+    
+            # Apro il file
+            my_file = open(self.name, 'r')
+
+            # Leggo il file linea per linea
+            for line in my_file:
+                
+                # Faccio lo split di ogni linea sulla virgola
+                elements = line.split(',')
+                
+                # Posso anche pulire il carattere di newline 
+                # dall'ultimo elemento con la funzione strip():
+                elements[-1] = elements[-1].strip()
+                
+                # p.s. in realta' strip() toglie anche gli spazi
+                # bianchi all'inizio e alla fine di una stringa.
+    
+                # Se NON sto processando l'intestazione...
+                if elements[0] != 'Date':
+                        
+                    # Aggiungo alla lista gli elementi di questa linea
+                    data.append(elements)
+            
+            # Chiudo il file
+            my_file.close()
+            
+            # Quando ho processato tutte le righe, ritorno i dati
+            return data
+
+
+
+#==============================
+# Classe per file NumericalCSV
+#==============================
+
+class NumericalCSVFile(CSVFile):
+    
+    def get_data(self):
+        
+        # Chiamo la get_data del genitore 
+        string_data = super().get_data()
+        
+        # Preparo lista per contenere i dati ma in formato numerico
+        numerical_data = []
+        
+        # Ciclo su tutte le "righe" corrispondenti al file originale 
+        for string_row in string_data:
+            
+            # Preparo una lista di supporto per salvare la riga
+            # in "formato" nuumerico (tranne il primo elemento)
+            numerical_row = []
+            
+            # Ciclo su tutti gli elementi della riga con un
+            # enumeratore: cosi' ho gratis l'indice "i" della
+            # posizione dell'elemento nella riga.
+            for i,element in enumerate(string_row):
+                
+                if i == 0:
+                    # Il primo elemento della riga lo lascio in formato stringa
+                    numerical_row.append(element)
+                    
+                else:
+                    # Converto a float tutto gli altri. Ma se fallisco, stampo
+                    # l'errore e rompo il ciclo (e poi saltero' la riga).
+                    try:
+                        numerical_row.append(float(element))
+                    except Exception as e:
+                        print('Errore in conversione del valore "{}" a numerico: "{}"'.format(element, e))
+                        break
+                
+            # Alla fine aggiungo la riga in formato numerico alla lista
+            # "esterna", ma solo se sono riuscito a processare tutti gli
+            # elementi. Qui controllo per la lunghezza, ma avrei anche potuto
+            # usare una variabile di supporto o fare due break in cascata.
+            if len(numerical_row) == len(string_row):
+                numerical_data.append(numerical_row)
+
+        return numerical_data
+
+   
+
+#==============================
+#  Corpo del programma
+#==============================
+
+
+
+mio_file_numerico = NumericalCSVFile(name='shampoo_sales.csv')
+print('Nome del file: "{}"'.format(mio_file_numerico.name))
+print('Dati contenuti nel file: "{}"'.format(mio_file_numerico.get_data()))
+
+###############################################################
+class CSVFile ():
+    def __init__ (self, name):
+        self.name=name
+
+    def get_data (self):
+        lista=[]
+        try:
+            file = open(self.name, 'r')
+        except Exception as e:
+            print("Il file non esiste")
+            print("Ho avuto questo errore: {}.".format(e))
+
+        for line in file:
+            elemento=line.split(',')
+            if(elemento[0]!='Date'):
+                elemento[1]=elemento[1].strip()
+                lista.append(elemento)
+        return lista
+
+
+class CSVFileNumerico (CSVFile):
+    def get_data(self):
+
+        string_data = super().get_data()
+        numerical_data = []
+
+        for string_row in string_data:
+            numerical_row = []
+
+            for i,element in enumerate(string_row):
+                if i == 0:
+                    numerical_row.append(element)  
+                else:
+                    try:
+                        numerical_row.append(float(element))
+                    except Exception as e:
+                        print('Errore in conversione del valore "{}" a numerico: "{}"'.format(element, e))
+                        break
+
+            if len(numerical_row) == len(string_row):
+                numerical_data.append(numerical_row)
+
+        return numerical_data
+
+
+mio_file_numerico = CSVFileNumerico(name='shampoo_sales.csv')
+print('Nome del file: "{}"'.format(mio_file_numerico.name))
+print('Dati contenuti nel file: "{}"'.format(mio_file_numerico.get_data()))
+
 
 #esempio 27 (LEZIONE 6)
 sesso = 'M'
@@ -605,3 +782,37 @@ for line in Lista:
 """
 
 #esempio 30 (LEZIONE 7)
+def somma (a,b):
+    return a+b
+#python -m unittest discover
+
+#esempio 31 (esercio lezione 7)
+
+
+#esempio 32 (LEZIONE 8) (esercio lezione 8)
+class Model():
+    def fit (self, data):
+        raise NotImplementedError('Metodo non implementato')
+
+    def predict (self, data):
+        raise NotImplementedError('Metodo non implementato')
+
+class IncrementModel(Model):
+
+    def predict(self, data):
+        incremento = 0
+        elem = 0
+        for item in data:
+            if(item != data[0]):
+                incremento = incremento+(item-elem)
+            elem=item
+        prediction = ((incremento/(len(data)-1)) + item)
+        return prediction
+
+Modello = IncrementModel()
+data = [50, 52, 60]
+previsione=Modello.predict(data)
+print("La previsione è: {}".format(previsione))
+
+
+#esempio 33 (LEZIONE 9)
