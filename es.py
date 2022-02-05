@@ -1,48 +1,42 @@
-class CSVFile ():
-    def __init__ (self, name):
-        self.name=name
+class Model():
+    def fit (self, data):
+        raise NotImplementedError('Metodo non implementato')
 
-    def get_data (self):
-        lista=[]
-        try:
-            file = open(self.name, 'r')
-        except Exception as e:
-            print("Il file non esiste")
-            print("Ho avuto questo errore: {}.".format(e))
+    def predict (self, data):
+        raise NotImplementedError('Metodo non implementato')
 
-        for line in file:
-            elemento=line.split(',')
-            if(elemento[0]!='Date'):
-                elemento[1]=elemento[1].strip()
-                lista.append(elemento)
-        return lista
+class IncrementModel(Model):
 
+    def predict(self, data):
+        incremento = 0
+        elem = 0
+        for item in data:
+            if(item >= 52):
+                incremento = incremento+(item-elem)
+            elem=item
+        prediction = ((incremento/(len(data)-5)) + item)
+        return prediction
 
-class CSVFileNumerico (CSVFile):
-    def get_data(self):
+class FitIncrementModel(IncrementModel):
+    def fit(self,data):
+        pass
+    def predict(self,data):
+        item_1=0
+        i=0
+        differenzialeTOT=0
+        for item in data:
+            if(i!=0):
+                differenzialeTOT=differenzialeTOT+(item-item_1)
+            item_1=item
+            i=i+1
+            if(i>len(data)-4):
+                break    
+        global_avg_increment=data[-1]+((differenzialeTOT/(len(data)-4))+super().predict(data)-data[-1])/2
+        self.global_avg_increment=global_avg_increment
+        return global_avg_increment
 
-        string_data = super().get_data()
-        numerical_data = []
-
-        for string_row in string_data:
-            numerical_row = []
-
-            for i,element in enumerate(string_row):
-                if i == 0:
-                    numerical_row.append(element)  
-                else:
-                    try:
-                        numerical_row.append(float(element))
-                    except Exception as e:
-                        print('Errore in conversione del valore "{}" a numerico: "{}"'.format(element, e))
-                        break
-
-            if len(numerical_row) == len(string_row):
-                numerical_data.append(numerical_row)
-
-        return numerical_data
-
-
-mio_file_numerico = CSVFileNumerico(name='shampoo_sales.csv')
-print('Nome del file: "{}"'.format(mio_file_numerico.name))
-print('Dati contenuti nel file: "{}"'.format(mio_file_numerico.get_data()))
+        
+Modello=FitIncrementModel()
+data=[8,19,31,41,50,52,60]
+previsione=Modello.predict(data)
+print("La previsione è: {}".format(previsione))
