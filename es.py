@@ -1,106 +1,248 @@
-class Model():
+'''
+class CSVFile ():
+    def __init__ (self, name):
+        self.name=name
 
-    def fit(self, data):
-        pass
-    
-    def predict(self, data):
-        pass
+        self.can_read = True
+        try:
+            my_file = open(self.name, 'r')
+            my_file.readline()
+        except Exception as e:
+            self.can_read = False
+            print('Errore in apertura del file: "{}"'.format(e))
 
-class IncrementModel(Model):
+    def get_data (self):
 
-    def __str__(self):
-        return 'IncrementModel'
-
-    def compute_avg_increment(self, data):
-        prev_item = None
-        increments = 0
-
-        for item in data:
-            if prev_item is not None:
-                increments += item - prev_item
-            prev_item = item
-        avg_increment = increments / (len(data)-1)
+        if not self.can_read:
+            print('Errore, file non aperto o illeggibile')
         
-        return avg_increment
+            return None
 
-    def predict(self, predict_data):
-        avg_increment = self.compute_avg_increment(predict_data)
-        return predict_data[-1] + avg_increment
+        else:
+            lista=[]
 
-
-class FitIncrementModel(IncrementModel):
-
-    def __str__(self):
-        return 'FitIncrementModel'
-
-    def fit(self, fit_data):
-        self.global_avg_increment = self.compute_avg_increment(fit_data)
-
-    def predict(self, predict_data):
-        parent_prediction = super().predict(predict_data)
-        parent_predict_increment = parent_prediction - predict_data[-1]
-        prediction_increment = (self.global_avg_increment + parent_predict_increment) / 2
-        prediction = predict_data[-1] + prediction_increment
-        return prediction
+            file = open(self.name, 'r')
 
 
-test_fit_data = [8,19,31,41]
-test_predict_data = [50,52,60]
+            for line in file:
+                elemento=line.split(',')
+                if(elemento[0]!='date'):
+                    elemento[1]=elemento[1].strip()
+                    lista.append(elemento)
+            return lista
 
-# Test rapido su IncrementModel (non unit test in questo caso)
-increment_model = IncrementModel()
-prediction = increment_model.predict(test_predict_data) 
-if not prediction == 65:
-    raise Exception('IncrementModel sul dataset di test non mi torna 65 ma "{}"'.format(prediction))
-else:
-    print('IncrementModel test passed')
 
-# Test rapido su FitIncrementModel (non unit test in questo caso)
-fit_increment_model = FitIncrementModel()
-fit_increment_model.fit(test_fit_data)
-prediction = fit_increment_model.predict(test_predict_data)
-if not prediction == 68:
-    raise Exception('FitIncrementModel sul dataset di test non mi torna 68 ma "{}"'.format(prediction))
-else:
-    print('FitIncrementModel test passed')
 
-# Linea vuota
-print('')
 
-shampoo_sales = [266.0, 145.9, 183.1, 119.3, 180.3, 168.5, 231.8, 224.5, 192.8, 122.9, 336.5, 185.9, 194.3, 149.5, 210.1, 273.3, 191.4, 287.0, 226.0, 303.6, 289.9, 421.6, 264.5, 342.3, 339.7, 440.4, 315.9, 439.3, 401.3, 437.4, 575.5, 407.6, 682.0, 475.3, 581.3, 646.9]
 
-eval_months = 12
-cutoff_month = len(shampoo_sales) - eval_months
 
-increment_model = IncrementModel()
 
-fit_increment_model = FitIncrementModel()
-fit_increment_model.fit(shampoo_sales[0:cutoff_month])
+##########################################
+class ExamException(Exception):
+    pass
 
-models = [increment_model, fit_increment_model]
 
-for model in models:
+class CSVFile ():
+    def __init__ (self, name):
+        self.name=name
 
-    error = 0
-    print('Evaluating model "{}"'.format(model))
+    def get_data (self):
+        lista=[]
+        try:
+            file = open(self.name, 'r')
+        except Exception as e:
+            print("Il file non esiste")
+            print("Ho avuto questo errore: {}.".format(e))
 
-    predictions = []
-    for i in range(eval_months):
-        predict_data = shampoo_sales[cutoff_month+i-3-1:cutoff_month+i-1]
-        prediction = model.predict(predict_data)
-        real = shampoo_sales[cutoff_month+i]
-        print('"{}" (pred) vs "{}" (real)'.format(int(prediction), int(real)))
+        for line in file:
+            elemento=line.split(',')
+            if(elemento[0]!='date'):
+                elemento[1]=elemento[1].strip()
+                lista.append(elemento)
+        return lista
 
-        predictions.append(prediction)
 
-        error += abs(prediction - shampoo_sales[cutoff_month+i])
+class CSVTimeSeriesFile (CSVFile):
+    def __init__(self,name):
+        self.name=name
+
+    def get_data(self):
+        string_data = super().get_data()
+        numerical_data = []
+
+        for string_row in string_data:
+            numerical_row = []
+            for i,item in enumerate(string_row):
+                if i == 0:
+                    numerical_row.append(item)  
+                else:
+                    try:
+                        numerical_row.append(float(item))
+                    except Exception as e:
+                        print('Errore in conversione del valore "{}" a numerico: "{}"'.format(element, e))
+                        break
+            numerical_data.append(numerical_row)
+        return numerical_data
+
+
+def compute_avg_monthly_difference (time_series, first_year, last_year):
+
+    values=[]
+    difference=[]
+    x=0
+    h=0
+    z=0
+
+    l=(int(last_year)-int(first_year))
     
-    error = error / eval_months
+    first_year=str(first_year)+'-01'
+    last_year=str(last_year)+'-12'
 
-    print('Average error: "{}"\n'.format(error))
+    for item in time_series:
+        if(first_year==item[0]):
+            for elem in time_series:
+                z=z+1
+                if z>h:
+                    values.append(elem[1])
+                if(last_year==elem[0]):
+                    break
+        h=h+1
+
+    
+    for i in range (0,12,1):
+        for k in range (i, l*12, 12):
+            x+=(values[k+12]-values[k])
+        difference.append(x/l)
+        x=0 
+
+    return difference
 
 
-from matplotlib import  pyplot
-pyplot.plot(shampoo_sales[0:cutoff_month] + predictions, color='tab:red')
-pyplot.plot(shampoo_sales, color='tab:green')
-pyplot.show()
+
+
+time_series_file = CSVTimeSeriesFile(name='data.csv')
+time_series = time_series_file.get_data()
+'''
+print('Nome del file: "{}"'.format(time_series_file.name))
+print('Dati contenuti nel file:')
+for line in time_series:
+    print(line)
+#print('Dati contenuti nel file: \n"{}"'.format(time_series))
+'''
+diff=[]
+x=str(input("Inserire il primo anno:"))
+y=str(input("Inserire il l'ultimo anno:"))
+
+
+
+
+diff=compute_avg_monthly_difference(time_series, x, y)
+for line in diff:
+    print(line)
+
+'''
+class ExamException(Exception):
+    pass
+
+
+class CSVTimeSeriesFile ():
+    def __init__ (self, name):
+        self.name=name
+
+        self.can_read = True
+        try:
+            my_file = open(self.name, 'r')
+            my_file.readline()
+        except Exception as e:
+            self.can_read = False
+            print('Errore in apertura del file: "{}"'.format(e))
+
+    def get_data (self):
+
+        if not self.can_read:
+            raise ExamException("Il file non esiste")
+        
+            return None
+
+        string_data=[]
+
+        file = open(self.name, 'r')
+
+        for line in file:
+            elemento=line.split(',')
+            if(elemento[0]!='date'):
+                elemento[1]=elemento[1].strip()
+                string_data.append(elemento)
+        
+        numerical_data = []
+
+        for string_row in string_data:
+            numerical_row = []
+            for i,item in enumerate(string_row):
+                if i == 0:
+                    numerical_row.append(item)  
+                else:
+                    try:
+                        numerical_row.append(float(item))
+                    except Exception as e:
+                        print('Errore in conversione del valore "{}" a numerico: "{}"'.format(element, e))
+                        break
+            numerical_data.append(numerical_row)
+        return numerical_data
+
+
+def compute_avg_monthly_difference (time_series, first_year, last_year):
+
+    values=[]
+    difference=[]
+    x=0
+    h=0
+    z=0
+
+    l=(int(last_year)-int(first_year))
+    
+    first_year=str(first_year)+'-01'
+    last_year=str(last_year)+'-12'
+
+    for item in time_series:
+        if(first_year==item[0]):
+            for elem in time_series:
+                z=z+1
+                if z>h:
+                    values.append(elem[1])
+                if(last_year==elem[0]):
+                    break
+        h=h+1
+
+    
+    for i in range (0,12,1):
+        for k in range (i, l*12, 12):
+            x+=(values[k+12]-values[k])
+        difference.append(x/l)
+        x=0 
+
+    return difference
+
+
+
+
+time_series_file = CSVTimeSeriesFile(name='data.csv')
+time_series = time_series_file.get_data()
+'''
+print('Nome del file: "{}"'.format(time_series_file.name))
+print('Dati contenuti nel file:')
+for line in time_series:
+    print(line)
+#print('Dati contenuti nel file: \n"{}"'.format(time_series))
+'''
+diff=[]
+x=str(input("Inserire il primo anno:"))
+y=str(input("Inserire il l'ultimo anno:"))
+
+
+
+
+diff=compute_avg_monthly_difference(time_series, x, y)
+for line in diff:
+    print(line)
+
