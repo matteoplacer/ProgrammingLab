@@ -94,7 +94,6 @@ def compute_avg_monthly_difference (time_series, first_year, last_year):
     last_year=str(last_year)+'-12'
 
     for item in time_series:
-        print(h)
         if(first_year==item[0]):
             for elem in time_series:
                 z=z+1
