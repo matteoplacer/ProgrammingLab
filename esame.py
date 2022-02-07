@@ -25,25 +25,57 @@ class CSVTimeSeriesFile ():
 
         file = open(self.name, 'r')
 
+        control_data=[]
+        for i in range(1949, 1961, 1):
+            x=str(i)
+            for k in range(1, 13, 1):
+                if(k<10):
+                    control_data.append(x+'-0'+str(k))
+                else:
+                    control_data.append(x+'-'+str(k))
+            
+
         for line in file:
             elemento=line.split(',')
             if(elemento[0]!='date'):
                 elemento[1]=elemento[1].strip()
                 string_data.append(elemento)
+
+
+        anni_mesi=[]
+        for item in string_data:
+            anni_mesi.append(item[0])
+
+        for item in anni_mesi:
+            if(item not in control_data):
+                raise ExamException("Errore, la data {} non è valida.".format(item))
+            if(anni_mesi.count(item)>1):
+                raise ExamException("Errore, la data {} si ripete.".format(item))
         
+
         numerical_data = []
 
         for string_row in string_data:
             numerical_row = []
             for i,item in enumerate(string_row):
                 if i == 0:
-                    numerical_row.append(item)  
+                    numerical_row.append(item) 
                 else:
-                    try:
-                        numerical_row.append(float(item))
-                    except Exception as e:
-                        print('Errore in conversione del valore "{}" a numerico: "{}"'.format(element, e))
-                        break
+                    if item=='':
+                        print("Errore, il valore riguardante la data {} non è presente.".format(string_row[0]))
+                    else:
+                        try:
+                            numerical_row.append(float(item))
+                        except:
+                            print("Errore in conversione del valore {} (data: {})".format((item),string_row[0]))
+                        else:
+                            if float(item) == 0:
+                                print("Errore, il valore {} è nullo (data: {})".format(float(item), string_row[0]))
+                                numerical_row.remove(float(item))
+                            if float(item) < 0:
+                                print("Errore, il valore {} è negativo (data: {})".format(float(item),string_row[0]))
+                                numerical_row.remove(float(item))
+
             numerical_data.append(numerical_row)
         return numerical_data
 
@@ -85,17 +117,26 @@ def compute_avg_monthly_difference (time_series, first_year, last_year):
 
 time_series_file = CSVTimeSeriesFile(name='data.csv')
 time_series = time_series_file.get_data()
-'''
+
 print('Nome del file: "{}"'.format(time_series_file.name))
 print('Dati contenuti nel file:')
 for line in time_series:
     print(line)
 #print('Dati contenuti nel file: \n"{}"'.format(time_series))
-'''
+
 numerical_years=[]
 
 for item in time_series:
     numerical_years.append(item[0])
+
+
+'''
+tutte_le_date=[]
+for item in time_series:
+    tutte_le_date.append(item[0])
+print(tutte_le_date)
+'''
+
 
 diff=[]
 x=str(input("Inserire il primo anno:"))
@@ -127,4 +168,3 @@ if l_y not in numerical_years:
 diff=compute_avg_monthly_difference(time_series, x, y)
 for line in diff:
     print(line)
-
