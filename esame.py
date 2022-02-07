@@ -94,6 +94,7 @@ def compute_avg_monthly_difference (time_series, first_year, last_year):
     last_year=str(last_year)+'-12'
 
     for item in time_series:
+        print(h)
         if(first_year==item[0]):
             for elem in time_series:
                 z=z+1
@@ -114,12 +115,12 @@ def compute_avg_monthly_difference (time_series, first_year, last_year):
 
 
 
-
 time_series_file = CSVTimeSeriesFile(name='data.csv')
 time_series = time_series_file.get_data()
 
 print('Nome del file: "{}"'.format(time_series_file.name))
 print('Dati contenuti nel file:')
+
 for line in time_series:
     print(line)
 #print('Dati contenuti nel file: \n"{}"'.format(time_series))
@@ -128,14 +129,6 @@ numerical_years=[]
 
 for item in time_series:
     numerical_years.append(item[0])
-
-
-'''
-tutte_le_date=[]
-for item in time_series:
-    tutte_le_date.append(item[0])
-print(tutte_le_date)
-'''
 
 
 diff=[]
@@ -166,5 +159,8 @@ if l_y not in numerical_years:
     raise ExamException("L'estremo inferiore dell'intervallo di tempo non è presente nel file")
 
 diff=compute_avg_monthly_difference(time_series, x, y)
+print("La differenza media del numero di passeggeri mensile tra il {} e il {} è:".format(x,y))
+i=0
 for line in diff:
-    print(line)
+    i=i+1
+    print("{}: {}".format(i, line))
