@@ -122,13 +122,13 @@ def compute_avg_monthly_difference (time_series, first_year, last_year):
 
 time_series_file = CSVTimeSeriesFile(name='data.csv')
 time_series = time_series_file.get_data()
-'''
+
 print('Nome del file: "{}"'.format(time_series_file.name))
 print('Dati contenuti nel file:')
 for line in time_series:
     print(line)
 #print('Dati contenuti nel file: \n"{}"'.format(time_series))
-'''
+
 diff=[]
 x=str(input("Inserire il primo anno:"))
 y=str(input("Inserire il l'ultimo anno:"))
@@ -139,6 +139,8 @@ y=str(input("Inserire il l'ultimo anno:"))
 diff=compute_avg_monthly_difference(time_series, x, y)
 for line in diff:
     print(line)
+
+'''
 
 '''
 class ExamException(Exception):
@@ -228,13 +230,13 @@ def compute_avg_monthly_difference (time_series, first_year, last_year):
 
 time_series_file = CSVTimeSeriesFile(name='data.csv')
 time_series = time_series_file.get_data()
-'''
+
 print('Nome del file: "{}"'.format(time_series_file.name))
 print('Dati contenuti nel file:')
 for line in time_series:
     print(line)
 #print('Dati contenuti nel file: \n"{}"'.format(time_series))
-'''
+
 diff=[]
 x=str(input("Inserire il primo anno:"))
 y=str(input("Inserire il l'ultimo anno:"))
@@ -245,4 +247,55 @@ y=str(input("Inserire il l'ultimo anno:"))
 diff=compute_avg_monthly_difference(time_series, x, y)
 for line in diff:
     print(line)
+'''
 
+class ExamException(Exception):
+        pass
+
+class CSVTimeSeriesFile ():
+    
+    def __init__(self, name):
+        
+        self.name = name
+
+    def get_data(self):
+        
+        data = []
+        my_file = open(self.name, 'r') 
+
+        #creo una nuova lista con gli elementi numerici di "data.csv"        
+        for line in my_file:
+            
+            elements = line.split(',')
+            new_list =[]
+    
+            if (elements[0] != 'date'):
+                new_list.append(elements[0])
+                new_list.append(int(elements[1]))
+                data.append(new_list)
+
+        my_file.close()
+        return data
+
+#creo una funzione che mi ritorni in input una lista delle medie delle differenze di ogni #mese tra anni consecutivi 
+
+def compute_avg_monthly_difference(time_series, first_year, last_year):
+    new_list=[]
+
+    for element in time_series:
+        new_list.append(element[1])
+
+    return new_list
+
+
+
+time_series_file = CSVTimeSeriesFile(name='data.csv')
+time_series = time_series_file.get_data()
+lista=[]
+
+for line in time_series:
+    print(line)
+
+new_list=compute_avg_monthly_difference(time_series, "1949", "1960")
+for item in new_list:
+    print(item)
