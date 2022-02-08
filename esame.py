@@ -61,17 +61,21 @@ class CSVTimeSeriesFile ():
                 if i == 0:
                     numerical_row.append(item) 
                 else:
+                    #controllo se manca un valore per un mese 
                     if item=='':
                         print("Errore, il valore riguardante la data {} non è presente.".format(string_row[0]))
                     else:
+                        #controllo che il valore dei passeggeri sia una stringa convertibile in float
                         try:
                             numerical_row.append(float(item))
                         except:
-                            print("Errore in conversione del valore {} (data: {})".format((item),string_row[0]))
+                            print("Errore in conversione del valore '{}' (data: {})".format((item),string_row[0]))
                         else:
+                            #controllo che il valore dei passeggeri è uguale a 0
                             if float(item) == 0:
                                 print("Errore, il valore {} è nullo (data: {})".format(float(item), string_row[0]))
                                 numerical_row.remove(float(item))
+                            #controllo che il valore cei passeggeri sia positivo
                             if float(item) < 0:
                                 print("Errore, il valore {} è negativo (data: {})".format(float(item),string_row[0]))
                                 numerical_row.remove(float(item))
@@ -98,37 +102,57 @@ def compute_avg_monthly_difference (time_series, first_year, last_year):
             for elem in time_series:
                 z=z+1
                 if z>h:
-                    values.append(elem[1])
+                    if len(elem)<=1:
+                        values.append(0)
+                    else:
+                        values.append(elem[1])
                 if(last_year==elem[0]):
                     break
         h=h+1
-
     
+    h=0
     for i in range (0,12,1):
+        h=0
+        for z in range(i, (l*12)+12, 12):
+            if(values[z] != 0): 
+                h=h+1
         for k in range (i, l*12, 12):
-            x+=(values[k+12]-values[k])
-        difference.append(x/l)
+            #analizzo il caso nel quale ho un intervallo di tempo di due annui con un dato mancante e torno 0
+            if(l==1 and h<2):
+                difference.append(0)
+                break
+            elif h>1:
+                x+=(values[k+12]-values[k])
+            else: 
+                difference.append(0)
+                break
+        #nel caso in cui ho un intervallo di tempo di due annui e ritorno 0 non devo quindi fare la media
+        if(h>1): 
+            if(l!=1 or (values[k]!=0 and values[k+12]!=0)):
+                difference.append(x/l)
         x=0 
+        h=0
+
 
     return difference
 
 
 
+
 time_series_file = CSVTimeSeriesFile(name='data.csv')
 time_series = time_series_file.get_data()
-
+'''
 print('Nome del file: "{}"'.format(time_series_file.name))
 print('Dati contenuti nel file:')
 
 for line in time_series:
     print(line)
 #print('Dati contenuti nel file: \n"{}"'.format(time_series))
-
+'''
 numerical_years=[]
 
 for item in time_series:
     numerical_years.append(item[0])
-
 
 diff=[]
 x=str(input("Inserire il primo anno:"))
@@ -147,6 +171,9 @@ except:
 
 if int(y) < int(x):
     raise ExamException("Errore! L'estremo inferiore dell'intervallo di tempo è maggiore dell'estremo superiore dello stesso intervallo")
+
+if int(y) == int(x):
+    raise ExamException("Errore! I due estremi dell'intervallo di tempo sono uguali")
 
 f_y=x+'-01'
 l_y=y+'-12'
