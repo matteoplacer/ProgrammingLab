@@ -38,7 +38,10 @@ class CSVTimeSeriesFile ():
                 elemento[1]=elemento[1].strip()
                 string_data.append(elemento)
 
-        #creo una lista con tutti gli anni e i mesi in formato stringa per poi confrontarla con la mia lista control_data
+        #chido il file perchè non verrà più utilizzato
+        file.close()
+
+        #creo una lista con tutti gli anni e i mesi del file in formato stringa per poi confrontarla con la mia lista control_data
         anni_mesi=[]
         for item in string_data:
             anni_mesi.append(item[0])
@@ -46,9 +49,9 @@ class CSVTimeSeriesFile ():
         #controllo se gli anni del mio file (copiati nella lista anni_mesi), sono uguali agli anni "giusti" inseriti nella lista control_data
         for item in anni_mesi:
             if(item not in control_data):
-                raise ExamException("Errore, la data {} non è valida.".format(item))
+                raise ExamException("Errore, la data {} del file non è valida.".format(item))
             if(anni_mesi.count(item)>1):
-                raise ExamException("Errore, la data {} si ripete.".format(item))
+                raise ExamException("Errore, la data {} si ripete nel file.".format(item))
         
         numerical_data = []
 
