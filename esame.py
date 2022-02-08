@@ -205,6 +205,3 @@ i=0
 for line in differenza_media_mesi:
     i=i+1
     print("{}: {}".format(i, line))
-
-
-
