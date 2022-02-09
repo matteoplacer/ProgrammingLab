@@ -52,13 +52,20 @@ class CSVTimeSeriesFile ():
                 raise ExamException("Errore, la data {} del file non è valida.".format(item))
             if(anni_mesi.count(item)>1):
                 raise ExamException("Errore, la data {} si ripete nel file.".format(item))
-        
+
+        #controllo se le date del file sono ordinate fruttando gli indici 
+        for item in anni_mesi:
+            if(anni_mesi.index(item)!=control_data.index(item)):
+                raise ExamException("Errore, la date del file non sono ordinate.")
+
+
         numerical_data = []
 
         #trasformo la mia lista di liste in formato stringa trasformando il valore dei passeggeri da stringa a float e faccio anche dei controlli sulle stringhe da convertire
         for string_row in string_data:
             numerical_row = []
             for i,item in enumerate(string_row):
+                #il primo elemento della riga lo lascio in formato stringa
                 if i == 0:
                     numerical_row.append(item) 
                 else:
@@ -68,18 +75,18 @@ class CSVTimeSeriesFile ():
                     else:
                         #controllo che il valore dei passeggeri sia una stringa convertibile in float
                         try:
-                            numerical_row.append(float(item))
+                            numerical_row.append(int(item))
                         except:
                             print("Errore in conversione del valore '{}' (data: {})".format((item),string_row[0]))
                         else:
                             #controllo che il valore dei passeggeri è uguale a 0
-                            if float(item) == 0:
-                                print("Errore, il valore {} è nullo (data: {})".format(float(item), string_row[0]))
-                                numerical_row.remove(float(item))
+                            if int(item) == 0:
+                                print("Errore, il valore {} è nullo (data: {})".format(int(item), string_row[0]))
+                                numerical_row.remove(int(item))
                             #controllo che il valore cei passeggeri sia positivo
-                            if float(item) < 0:
-                                print("Errore, il valore {} è negativo (data: {})".format(float(item),string_row[0]))
-                                numerical_row.remove(float(item))
+                            if int(item) < 0:
+                                print("Errore, il valore {} è negativo (data: {})".format(int(item),string_row[0]))
+                                numerical_row.remove(int(item))
 
             numerical_data.append(numerical_row)
         return numerical_data
@@ -150,20 +157,16 @@ def compute_avg_monthly_difference (time_series, first_year, last_year):
 time_series_file = CSVTimeSeriesFile(name='data.csv')
 time_series = time_series_file.get_data()
 
-'''
-print('Nome del file: "{}"'.format(time_series_file.name))
-print('Dati contenuti nel file:')
-
-for line in time_series:
-    print(line)
-#print('Dati contenuti nel file: \n"{}"'.format(time_series))
-'''
-
 #creo una lista con tutti gli anni appartenenti al file
 string_years=[]
 
 for item in time_series:
     string_years.append(item[0])
+
+'''
+if len(string_years) == 0:
+    raise ExamException("Il file è vuoto")
+'''
 
 #chiedo in input l'intervallo di tempo
 x=str(input("Inserire il primo anno:"))
@@ -174,7 +177,6 @@ try:
     int(x)
 except:
     raise ExamException("Errore!  L'estremo inferiore dell'intervallo di tempo non è un anno")
-
 try:
     int(x)
 except:
@@ -192,12 +194,12 @@ l_y=y+'-12'
 
 #controllo che il mio intervallo appartenga agli anni contenuti nel file
 if f_y not in string_years:
-    raise ExamException("L'estremo inferiore dell'intervallo di tempo non è presente nel file")
+    raise ExamException("Errore! L'estremo inferiore dell'intervallo di tempo non è presente nel file")
 
 if l_y not in string_years:
-    raise ExamException("L'estremo inferiore dell'intervallo di tempo non è presente nel file")
+    raise ExamException("Errore! L'estremo inferiore dell'intervallo di tempo non è presente nel file")
 
-#creo la lista dove salverò il miei risultati
+#creo la lista dove salverò i miei risultati
 differenza_media_mesi=[]
 
 differenza_media_mesi=compute_avg_monthly_difference(time_series, x, y)
