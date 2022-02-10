@@ -188,3 +188,23 @@ def compute_avg_monthly_difference (time_series, first_year, last_year):
         h=0
 
     return difference
+
+
+
+time_series_file = CSVTimeSeriesFile(name='data.csv')
+time_series = time_series_file.get_data()
+
+#chiedo in input l'intervallo di tempo
+x=str(input("Inserire il primo anno:"))
+y=str(input("Inserire il l'ultimo anno:"))
+
+#creo la lista dove salverò i miei risultati
+differenza_media_mesi=[]
+
+differenza_media_mesi=compute_avg_monthly_difference(time_series, x, y)
+
+print("La differenza media di passeggeri per ogni mese tra il {} e il {} è:".format(x,y))
+
+#stampo la mia lista con i valori delle differenze medie del numero di passeggeri tra i due anni inseriti dall'utente per ogni mese 
+for line in differenza_media_mesi:
+    print(line)
