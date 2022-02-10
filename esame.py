@@ -7,15 +7,15 @@ class CSVTimeSeriesFile ():
     def __init__ (self, name):
         self.name=name
 
+    
+    def get_data (self):
+
         #controllo che il file esista e sia leggibile
         try:
             file = open(self.name, 'r')
             file.readline()
         except:
             raise ExamException("Errore in apertura del file, il file non esiste o non è leggibile")
-    
-    def get_data (self):
-
 
         string_data=[]
 
@@ -46,14 +46,14 @@ class CSVTimeSeriesFile ():
         for item in string_data:
             anni_mesi.append(item[0])
 
-        #controllo se gli anni del mio file (copiati nella lista anni_mesi), sono uguali agli anni "giusti" inseriti nella lista control_data
+        #controllo se gli anni del mio file (copiati nella lista anni_mesi), sono uguali agli anni "giusti" inseriti nella lista control_data, se no alzo delle eccezioni
         for item in anni_mesi:
             if(item not in control_data):
                 raise ExamException("Errore, la data {} del file non è valida.".format(item))
             if(anni_mesi.count(item)>1):
                 raise ExamException("Errore, la data {} si ripete nel file.".format(item))
 
-        #controllo se le date del file sono ordinate fruttando gli indici 
+        #controllo se le date del file sono ordinate fruttando gli indici, se no alzo un'eccezione
         for item in anni_mesi:
             if(anni_mesi.index(item)!=control_data.index(item)):
                 raise ExamException("Errore, la date del file non sono ordinate.")
@@ -61,7 +61,7 @@ class CSVTimeSeriesFile ():
 
         numerical_data = []
 
-        #trasformo la mia lista di liste in formato stringa trasformando il valore dei passeggeri da stringa a float e faccio anche dei controlli sulle stringhe da convertire
+        #riempio una nuova lista, a partire dalla lista string_data, con delle liste con due elementi, il primo (la data) in stringa, il secondo trasformato in intero (numero passeggeri), facendo dei controlli senza bloccare il codice
         for string_row in string_data:
             numerical_row = []
             for i,item in enumerate(string_row):
@@ -73,19 +73,19 @@ class CSVTimeSeriesFile ():
                     if item=='':
                         print("Errore, il valore riguardante la data {} non è presente.".format(string_row[0]))
                     else:
-                        #controllo che il valore dei passeggeri sia una stringa convertibile in float
+                        #controllo che il valore dei passeggeri sia una stringa convertibile in intero
                         try:
                             numerical_row.append(int(item))
                         except:
                             print("Errore in conversione del valore '{}' (data: {})".format((item),string_row[0]))
                         else:
-                            #controllo che il valore dei passeggeri è uguale a 0
+                            #controllo che il valore dei passeggeri sia uguale a 0
                             if int(item) == 0:
-                                print("Errore, il valore {} è nullo (data: {})".format(int(item), string_row[0]))
+                                print("Errore, il valore riguardante la data {} è nullo".format(int(item), string_row[0]))
                                 numerical_row.remove(int(item))
-                            #controllo che il valore cei passeggeri sia positivo
+                            #controllo che il valore dei passeggeri sia positivo
                             if int(item) < 0:
-                                print("Errore, il valore {} è negativo (data: {})".format(int(item),string_row[0]))
+                                print("Errore, il valore '{}' è negativo (data: {})".format(int(item),string_row[0]))
                                 numerical_row.remove(int(item))
 
             numerical_data.append(numerical_row)
@@ -107,7 +107,7 @@ def compute_avg_monthly_difference (time_series, first_year, last_year):
     first_year=str(first_year)+'-01'
     last_year=str(last_year)+'-12'
 
-    #creo una lista con i valori dei passeggeri, che corrispondono agli anni dell'intervallo di tempo 
+    #creo una lista con il numero di passeggeri, che corrispondono agli anni appartenenti all'intervallo di tempo 
     for item in time_series:
         if(first_year==item[0]):
             for elem in time_series:
@@ -142,7 +142,7 @@ def compute_avg_monthly_difference (time_series, first_year, last_year):
             else: 
                 difference.append(0)
                 break
-        #nel caso non sono riuscito a calcolare la differenza media per dei mesi allora salto questo passaggio
+        #nel caso non sono riuscito a calcolare la differenza per dei mesi allora salto questo passaggio
         if(h>1): 
             if(l!=1 or (values[k]!=0 and values[k+12]!=0)):
                 difference.append(x/l)
@@ -163,10 +163,9 @@ string_years=[]
 for item in time_series:
     string_years.append(item[0])
 
-'''
+#controllo se il file è vuoto
 if len(string_years) == 0:
-    raise ExamException("Il file è vuoto")
-'''
+    raise ExamException("Errore in apertura del file, il file è vuoto")
 
 #chiedo in input l'intervallo di tempo
 x=str(input("Inserire il primo anno:"))
@@ -197,16 +196,15 @@ if f_y not in string_years:
     raise ExamException("Errore! L'estremo inferiore dell'intervallo di tempo non è presente nel file")
 
 if l_y not in string_years:
-    raise ExamException("Errore! L'estremo inferiore dell'intervallo di tempo non è presente nel file")
+    raise ExamException("Errore! L'estremo superiore dell'intervallo di tempo non è presente nel file")
 
 #creo la lista dove salverò i miei risultati
 differenza_media_mesi=[]
 
 differenza_media_mesi=compute_avg_monthly_difference(time_series, x, y)
-print("La differenza media del numero di passeggeri mensile tra il {} e il {} è:".format(x,y))
 
-#stampo la mia lista con i valori delle differenze medie del numero di passeggeri tra i due anni inseriti dall'utente per ogni mese aggiungendo il numero del mese per semplificare la lettura
-i=0
+print("La differenza media di passeggeri per ogni mese tra il {} e il {} è:".format(x,y))
+
+#stampo la mia lista con i valori delle differenze medie del numero di passeggeri tra i due anni inseriti dall'utente per ogni mese 
 for line in differenza_media_mesi:
-    i=i+1
-    print("{}: {}".format(i, line))
+    print(line)
