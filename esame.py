@@ -38,6 +38,10 @@ class CSVTimeSeriesFile ():
                 elemento[1]=elemento[1].strip()
                 string_data.append(elemento)
 
+        #controllo se il file è vuoto
+        if len(string_data) == 0:
+            raise ExamException("Errore in apertura del file, il file è vuoto")
+
         #chido il file perchè non verrà più utilizzato
         file.close()
 
@@ -93,6 +97,39 @@ class CSVTimeSeriesFile ():
 
 
 def compute_avg_monthly_difference (time_series, first_year, last_year):
+
+    #creo una lista con tutti gli anni appartenenti al file
+    string_years=[]
+
+    for item in time_series:
+        string_years.append(item[0])
+
+    #controllo che i valori inseriti siano un numero
+    try:
+        int(first_year)
+    except:
+        raise ExamException("Errore!  L'estremo inferiore dell'intervallo di tempo non è un anno")
+    try:
+        int(last_year)
+    except:
+        raise ExamException("Errore! L'estremo superiore dell'intervallo di tempo non è un anno")
+
+    #controllo che l'intervallo abbia senso 
+    if int(last_year) < int(first_year):
+        raise ExamException("Errore! L'estremo inferiore dell'intervallo di tempo è maggiore dell'estremo superiore dello stesso intervallo")
+
+    if int(last_year) == int(first_year):
+        raise ExamException("Errore! I due estremi dell'intervallo di tempo sono uguali")
+
+    f_y=first_year+'-01'
+    l_y=last_year+'-12'
+
+    #controllo che il mio intervallo appartenga agli anni contenuti nel file
+    if f_y not in string_years:
+        raise ExamException("Errore! L'estremo inferiore dell'intervallo di tempo non è presente nel file")
+
+    if l_y not in string_years:
+        raise ExamException("Errore! L'estremo superiore dell'intervallo di tempo non è presente nel file")
 
     values=[]
     difference=[]
@@ -151,60 +188,3 @@ def compute_avg_monthly_difference (time_series, first_year, last_year):
         h=0
 
     return difference
-
-
-
-time_series_file = CSVTimeSeriesFile(name='data.csv')
-time_series = time_series_file.get_data()
-
-#creo una lista con tutti gli anni appartenenti al file
-string_years=[]
-
-for item in time_series:
-    string_years.append(item[0])
-
-#controllo se il file è vuoto
-if len(string_years) == 0:
-    raise ExamException("Errore in apertura del file, il file è vuoto")
-
-#chiedo in input l'intervallo di tempo
-x=str(input("Inserire il primo anno:"))
-y=str(input("Inserire il l'ultimo anno:"))
-
-#controllo che i valori inseriti siano un numero
-try:
-    int(x)
-except:
-    raise ExamException("Errore!  L'estremo inferiore dell'intervallo di tempo non è un anno")
-try:
-    int(x)
-except:
-    raise ExamException("Errore! L'estremo superiore dell'intervallo di tempo non è un anno")
-
-#controllo che l'intervallo abbia senso 
-if int(y) < int(x):
-    raise ExamException("Errore! L'estremo inferiore dell'intervallo di tempo è maggiore dell'estremo superiore dello stesso intervallo")
-
-if int(y) == int(x):
-    raise ExamException("Errore! I due estremi dell'intervallo di tempo sono uguali")
-
-f_y=x+'-01'
-l_y=y+'-12'
-
-#controllo che il mio intervallo appartenga agli anni contenuti nel file
-if f_y not in string_years:
-    raise ExamException("Errore! L'estremo inferiore dell'intervallo di tempo non è presente nel file")
-
-if l_y not in string_years:
-    raise ExamException("Errore! L'estremo superiore dell'intervallo di tempo non è presente nel file")
-
-#creo la lista dove salverò i miei risultati
-differenza_media_mesi=[]
-
-differenza_media_mesi=compute_avg_monthly_difference(time_series, x, y)
-
-print("La differenza media di passeggeri per ogni mese tra il {} e il {} è:".format(x,y))
-
-#stampo la mia lista con i valori delle differenze medie del numero di passeggeri tra i due anni inseriti dall'utente per ogni mese 
-for line in differenza_media_mesi:
-    print(line)

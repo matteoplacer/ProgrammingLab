@@ -1,43 +1,4 @@
 '''
-class CSVFile ():
-    def __init__ (self, name):
-        self.name=name
-
-        self.can_read = True
-        try:
-            my_file = open(self.name, 'r')
-            my_file.readline()
-        except Exception as e:
-            self.can_read = False
-            print('Errore in apertura del file: "{}"'.format(e))
-
-    def get_data (self):
-
-        if not self.can_read:
-            print('Errore, file non aperto o illeggibile')
-        
-            return None
-
-        else:
-            lista=[]
-
-            file = open(self.name, 'r')
-
-
-            for line in file:
-                elemento=line.split(',')
-                if(elemento[0]!='date'):
-                    elemento[1]=elemento[1].strip()
-                    lista.append(elemento)
-            return lista
-
-
-
-
-
-
-
-##########################################
 class ExamException(Exception):
     pass
 
@@ -133,16 +94,12 @@ diff=[]
 x=str(input("Inserire il primo anno:"))
 y=str(input("Inserire il l'ultimo anno:"))
 
-
-
-
 diff=compute_avg_monthly_difference(time_series, x, y)
 for line in diff:
     print(line)
 
 '''
 
-'''
 class ExamException(Exception):
     pass
 
@@ -247,6 +204,4 @@ y=str(input("Inserire il l'ultimo anno:"))
 diff=compute_avg_monthly_difference(time_series, x, y)
 for line in diff:
     print(line)
-'''
 
-print(int(10.0))
